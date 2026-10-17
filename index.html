@@ -202,7 +202,7 @@
       font-weight: 700;
     }
 
-    .glass-box {
+    .glass-box, .extras-box {
       background: #f0f9ff;
       border: 1px dashed #7dd3fc;
       padding: 14px;
@@ -220,6 +220,12 @@
       font-size: 0.88rem;
       font-weight: 600;
       margin-top: 8px;
+    }
+
+    .plz-status {
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-top: 4px;
     }
 
     .min-hours-note {
@@ -423,15 +429,25 @@
       Professionelle Reinigung für Büros und Arztpraxen inkl. spezieller Desinfektionsleistungen.
     </div>
 
-    <div class="section-title">2. Arbeitsstunden & Objektgröße</div>
+    <!-- إضافة التحقق من الرمز البريدي PLZ -->
+    <div class="section-title">2. Einsatzort prüfen (PLZ Bremen & Umland)</div>
+    <div class="control-group">
+      <div class="control-header">
+        <span>Postleitzahl (PLZ) eingeben</span>
+        <span class="badge" id="plzBadge">Bremen</span>
+      </div>
+      <input type="text" id="plzInput" class="form-input" placeholder="z.B. 28195 (Bremen)" maxlength="5" value="28195">
+      <div class="plz-status" id="plzStatus" style="color: #15803d;">✓ Im Einsatzgebiet Bremen & Umland</div>
+    </div>
+
+    <div class="section-title">3. Arbeitsstunden & Objektgröße</div>
     <div class="control-group">
       <div class="control-header">
         <span>Gewünschte Arbeitsstunden (Monat / Einsatz)</span>
         <span class="badge"><span id="hoursVal">3</span> Std.</span>
       </div>
-      <!-- تم رفع الحد الأقصى إلى 100 ساعة -->
       <input type="range" id="hoursInput" min="2" max="100" step="1" value="3">
-      <div class="min-hours-note">* يدعم الطلبات الفردية وعقود الصيانة الشهرية للشركات حتى 100 ساعة.</div>
+      <div class="min-hours-note">* Unterstützt Einzelaufträge sowie regelmäßige Rahmen- / Wartungsverträge bis 100 Std.</div>
     </div>
 
     <div class="control-group">
@@ -445,7 +461,19 @@
       </div>
     </div>
 
-    <div class="section-title">3. Glasreinigung (Optional, ab 25 m²)</div>
+    <!-- إضافة خيار مواد التنظيف -->
+    <div class="section-title">4. Reinigungsmittel & Zubehör</div>
+    <div class="extras-box">
+      <label style="display:flex; align-items:center; gap:8px; font-weight:700; cursor:pointer;">
+        <input type="checkbox" id="enableSupplies" style="width:18px; height:18px; accent-color:var(--brand-blue);">
+        Inklusive professionelle Reinigungsmittel & Verbrauchsmaterialien (+ 15% Aufschlag auf Lohnkosten)
+      </label>
+      <div style="font-size: 0.82rem; color: var(--muted); margin-top: 4px;">
+        Wählen Sie diese Option, wenn A&S die speziellen Reinigungsmittel und Utensilien stellt.
+      </div>
+    </div>
+
+    <div class="section-title">5. Glasreinigung (Optional, ab 25 m²)</div>
     <div class="glass-box">
       <label style="display:flex; align-items:center; gap:8px; font-weight:700; cursor:pointer; margin-bottom:10px;">
         <input type="checkbox" id="enableGlass" style="width:18px; height:18px; accent-color:var(--brand-blue);">
@@ -474,7 +502,7 @@
       </div>
     </div>
 
-    <div class="section-title">4. Einsatzzeit & Zuschläge</div>
+    <div class="section-title">6. Einsatzzeit & Zuschläge</div>
     <select id="surchargeSelect">
       <option value="0" data-label="Reguläre Arbeitszeit (0%)">Reguläre Arbeitszeit (Mo–Fr tagsüber bis 20:00 Uhr) — 0% Zuschlag</option>
       <option value="0.25" data-label="Mo–Fr 20:00–24:00 Uhr (+25%)">Spätdienst (Mo–Fr ab 20:00 Uhr – 24:00 Uhr) — zzgl. 25%</option>
@@ -485,7 +513,7 @@
       <option value="0.50" data-label="24h Notdienst Soforteinsatz (+50%)">24h Service / Notdienst Soforteinsatz (Stufe 2) — zzgl. 50%</option>
     </select>
 
-    <div class="section-title">5. Reinigungsintervall & Anfahrtskosten</div>
+    <div class="section-title">7. Reinigungsintervall & Anfahrtskosten</div>
     <div class="grid-2" id="travelGroup">
       <div class="radio-card active" data-type="regular" data-label="Regelmäßige Reinigung">
         <span>Regelmäßige Reinigung</span>
@@ -522,6 +550,10 @@
       <li>
         <span>Reinigung (<span id="hrsSummary">3</span> Std. × <span id="rateSummary">27,00</span> €):</span>
         <strong id="laborCostTxt">81,00 €</strong>
+      </li>
+      <li id="suppliesRow" style="display:none;">
+        <span>Reinigungsmittel (+15%):</span>
+        <strong id="suppliesCostTxt">0,00 €</strong>
       </li>
       <li>
         <span>Zeitzuschlag / Notdienst (<span id="surchargePctTxt">0%</span>):</span>
@@ -584,17 +616,37 @@
   const glassControls = document.getElementById('glassControls');
   const glassAreaInput = document.getElementById('glassAreaInput');
   const surchargeSelect = document.getElementById('surchargeSelect');
+  const plzInput = document.getElementById('plzInput');
+  const plzStatus = document.getElementById('plzStatus');
+  const enableSupplies = document.getElementById('enableSupplies');
+  const suppliesRow = document.getElementById('suppliesRow');
 
   let glassRate = 3.0;
   let glassTypeLabel = "Neubau (3,00 €/m²)";
   let travelMode = "regular";
   let travelLabel = "Regelmäßige Reinigung";
-
   let currentCalculation = {};
 
   function formatEuro(num) {
     return num.toFixed(2).replace('.', ',') + ' €';
   }
+
+  // التحقق البسيط من الرمز البريدي في بريمن والمحيط (تبدأ غالباً بـ 28 أو محيطها)
+  plzInput.addEventListener('input', () => {
+    const val = plzInput.value.trim();
+    if (val.length === 5) {
+      if (val.startsWith('28') || val.startsWith('27') || val.startsWith('29')) {
+        plzStatus.textContent = "✓ Im Einsatzgebiet Bremen & Umland";
+        plzStatus.style.color = "#15803d";
+      } else {
+        plzStatus.textContent = "ℹ️ Außerhalb Kerngebiet Bremen (Individuelle Absprache)";
+        plzStatus.style.color = "#d97706";
+      }
+    } else {
+      plzStatus.textContent = "Bitte 5-stellige PLZ eingeben";
+      plzStatus.style.color = "#475569";
+    }
+  });
 
   document.querySelectorAll('#buildingAgeGroup .radio-card').forEach(card => {
     card.addEventListener('click', () => {
@@ -621,6 +673,8 @@
     calculate();
   });
 
+  enableSupplies.addEventListener('change', calculate);
+
   serviceSelect.addEventListener('change', () => {
     const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
     serviceDesc.textContent = selectedOption.dataset.desc;
@@ -645,6 +699,16 @@
 
     const baseLabor = hours * hourlyRate;
 
+    // حساب مواد التنظيف (15% إضافية إذا تم تفعيلها)
+    let suppliesCost = 0;
+    if (enableSupplies.checked) {
+      suppliesCost = baseLabor * 0.15;
+      suppliesRow.style.display = 'flex';
+      document.getElementById('suppliesCostTxt').textContent = formatEuro(suppliesCost);
+    } else {
+      suppliesRow.style.display = 'none';
+    }
+
     let glassCost = 0;
     const glassArea = parseInt(glassAreaInput.value, 10);
     document.getElementById('glassAreaVal').textContent = glassArea;
@@ -659,7 +723,7 @@
       document.getElementById('glassSummaryTxt').textContent = 'nicht gewählt';
     }
 
-    const surchargeCost = (baseLabor + glassCost) * surchargeRate;
+    const surchargeCost = (baseLabor + suppliesCost + glassCost) * surchargeRate;
 
     let travelNet = 0;
     if (travelMode === 'regular') {
@@ -668,7 +732,7 @@
       travelNet = 30.0;
     }
 
-    const netTotal = baseLabor + glassCost + surchargeCost + travelNet;
+    const netTotal = baseLabor + suppliesCost + glassCost + surchargeCost + travelNet;
     const vatAmount = netTotal * 0.19;
     const grossTotal = netTotal + vatAmount;
 
@@ -691,6 +755,7 @@
       hours: hours.toString().replace('.', ','),
       objArea,
       baseLabor: formatEuro(baseLabor),
+      suppliesText: enableSupplies.checked ? `Inkl. Reinigungsmittel (${formatEuro(suppliesCost)})` : "Exklusive (wird bauseits gestellt)",
       glassDetails,
       surchargeLabel,
       surchargeCost: formatEuro(surchargeCost),
@@ -705,7 +770,7 @@
   function buildMessageText() {
     const name = document.getElementById('custName').value.trim();
     const phone = document.getElementById('custPhone').value.trim();
-    const address = document.getElementById('custAddress').value.trim() || "Nicht angegeben";
+    const address = document.getElementById('custAddress').value.trim() || plzInput.value.trim() || "Nicht angegeben";
     const notes = document.getElementById('custNotes').value.trim() || "Keine";
     const errorEl = document.getElementById('formError');
 
@@ -725,12 +790,13 @@ ich interessiere mich für ein unverbindliches Angebot gemäß Ihrer Preisberech
 👤 *Kundendaten:*
 • Name/Firma: ${name}
 • Telefon: ${phone}
-• Ort/Objekt: ${address}
+• PLZ / Ort: ${address}
 
 🧹 *Gewählte Reinigungsleistung:*
 • Leistung: ${c.serviceName} (${c.hourlyRate}/Std.)
 • Arbeitsstunden (Gesamt/Monat): ${c.hours} Std. (= ${c.baseLabor})
 • Objektfläche: ca. ${c.objArea} m²${areaNote}
+• Material: ${c.suppliesText}
 • Glasreinigung: ${c.glassDetails}
 • Einsatzzeit/Zuschlag: ${c.surchargeLabel} (= ${c.surchargeCost})
 • Intervall & Anfahrt: ${c.travelLabel} (= ${c.travelNet})
@@ -760,7 +826,7 @@ ${notes}`;
     window.location.href = mailto;
   });
 
-  [hoursInput, objectAreaInput, glassAreaInput, surchargeSelect].forEach(el => {
+  [hoursInput, objectAreaInput, glassAreaInput, surchargeSelect, plzInput].forEach(el => {
     el.addEventListener('input', calculate);
   });
 
