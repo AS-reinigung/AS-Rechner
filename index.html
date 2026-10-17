@@ -191,7 +191,7 @@
       align-items: center;
       text-align: center;
       justify-content: space-between;
-      font-size: 0.85srem;
+      font-size: 0.85rem;
     }
 
     .radio-card:hover {
@@ -204,7 +204,7 @@
       font-weight: 700;
     }
 
-    .glass-box, .extras-box {
+    .glass-box, .extras-box, .schedule-box {
       background: #f0f9ff;
       border: 1px dashed #7dd3fc;
       padding: 14px;
@@ -443,13 +443,45 @@
     </div>
 
     <div class="section-title">3. Arbeitsstunden & Objektgröße</div>
-    <div class="control-group">
+    
+    <!-- زر تبديل لإظهار تفصيل الجدول الأسبوعي الاختياري -->
+    <div class="schedule-box">
+      <label style="display:flex; align-items:center; gap:8px; font-weight:700; cursor:pointer;">
+        <input type="checkbox" id="enableSchedule" style="width:18px; height:18px; accent-color:var(--brand-blue);">
+        Individuellen Wochenplan festlegen (Tage & Stunden pro Tag)
+      </label>
+      <div style="font-size: 0.82rem; color: var(--muted); margin-top: 4px;">
+        Aktivieren Sie diese Option, um die genauen Arbeitstage und Stunden einzutragen.
+      </div>
+
+      <!-- إعدادات الجدول الأسبوعي التفصيلي (تظهر فقط عند التفعيل) -->
+      <div id="scheduleControls" style="display:none; margin-top:12px; border-top:1px dashed #cbd5e1; pt:10px;">
+        <div class="control-group" style="margin-top:10px;">
+          <div class="control-header">
+            <span>Arbeitstage pro Woche</span>
+            <span class="badge"><span id="daysVal">4</span> Tage/Woche</span>
+          </div>
+          <input type="range" id="daysInput" min="1" max="7" step="1" value="4">
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <span>Stunden pro Arbeitstag</span>
+            <span class="badge"><span id="hoursPerDayVal">2</span> Std./Tag</span>
+          </div>
+          <input type="range" id="hoursPerDayInput" min="0.5" max="10" step="0.5" value="2">
+        </div>
+      </div>
+    </div>
+
+    <!-- المؤشر الشهري المباشر (يعمل تلقائياً أو يدوياً) -->
+    <div class="control-group" id="standardHoursGroup" style="margin-top: 14px;">
       <div class="control-header">
         <span>Gewünschte Arbeitsstunden (Monat / Einsatz)</span>
         <span class="badge"><span id="hoursVal">33</span> Std.</span>
       </div>
       <input type="range" id="hoursInput" min="2" max="100" step="1" value="33">
-      <div class="min-hours-note">* Unterstützt Einzelaufträge sowie regelmäßige Rahmen- / Wartungsverträge bis 100 Std.</div>
+      <div class="min-hours-note" id="hoursNote">* Unterstützt Einzelaufträge sowie regelmäßige Rahmenverträge bis 100 Std.</div>
     </div>
 
     <div class="control-group">
@@ -515,7 +547,7 @@
       <option value="0.50" data-label="24h Notdienst Soforteinsatz (+50%)">24h Service / Notdienst Soforteinsatz (Stufe 2) — zzgl. 50%</option>
     </select>
 
-    <!-- خيارات التنقل المحدثة لتشمل باوشال العقود الشهرية -->
+    <!-- خيارات التنقل -->
     <div class="section-title">7. Reinigungsintervall & Anfahrtskosten</div>
     <div class="grid-3" id="travelGroup">
       <div class="radio-card active" data-type="regular" data-label="Regelmäßige Klein-Einsätze">
@@ -625,6 +657,12 @@
   const enableSupplies = document.getElementById('enableSupplies');
   const suppliesRow = document.getElementById('suppliesRow');
 
+  const enableSchedule = document.getElementById('enableSchedule');
+  const scheduleControls = document.getElementById('scheduleControls');
+  const standardHoursGroup = document.getElementById('standardHoursGroup');
+  const daysInput = document.getElementById('daysInput');
+  const hoursPerDayInput = document.getElementById('hoursPerDayInput');
+
   let glassRate = 3.0;
   let glassTypeLabel = "Neubau (3,00 €/m²)";
   let travelMode = "regular";
@@ -678,6 +716,17 @@
 
   enableSupplies.addEventListener('change', calculate);
 
+  enableSchedule.addEventListener('change', () => {
+    if (enableSchedule.checked) {
+      scheduleControls.style.display = 'block';
+      standardHoursGroup.style.display = 'none';
+    } else {
+      scheduleControls.style.display = 'none';
+      standardHoursGroup.style.display = 'block';
+    }
+    calculate();
+  });
+
   serviceSelect.addEventListener('change', () => {
     const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
     serviceDesc.textContent = selectedOption.dataset.desc;
@@ -688,16 +737,33 @@
     const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
     const serviceName = selectedOption.dataset.name;
     const hourlyRate = parseFloat(serviceSelect.value);
-    const hours = Math.max(2, parseFloat(hoursInput.value));
-    const objArea = parseInt(objectAreaInput.value, 10);
 
+    let hours = 0;
+    let scheduleInfoText = "";
+
+    if (enableSchedule.checked) {
+      const daysPerWeek = parseInt(daysInput.value, 10);
+      const hrsPerDay = parseFloat(hoursPerDayInput.value);
+      
+      document.getElementById('daysVal').textContent = daysPerWeek;
+      document.getElementById('hoursPerDayVal').textContent = hrsPerDay.toString().replace('.', ',');
+
+      // حساب الساعات الشهرية بناءً على 4.33 أسبوع في الشهر
+      const monthlyHoursExact = daysPerWeek * hrsPerDay * 4.3333;
+      hours = Math.round(monthlyHoursExact * 10) / 10; // تقريب لأقرب جزء من عشرة
+      
+      scheduleInfoText = ` (Wochenplan: ${daysPerWeek} Tage/Woche à ${hrsPerDay} Std. = ca. ${hours} Std./Monat)`;
+    } else {
+      hours = Math.max(2, parseFloat(hoursInput.value));
+      document.getElementById('hoursVal').textContent = hours.toString().replace('.', ',');
+    }
+
+    const objArea = parseInt(objectAreaInput.value, 10);
     const surchargeOpt = surchargeSelect.options[surchargeSelect.selectedIndex];
     const surchargeRate = parseFloat(surchargeSelect.value);
     const surchargeLabel = surchargeOpt.dataset.label;
 
-    document.getElementById('hoursVal').textContent = hours.toString().replace('.', ',');
     document.getElementById('objectAreaVal').textContent = objArea;
-
     alert250.style.display = objArea >= 250 ? 'block' : 'none';
 
     const baseLabor = hours * hourlyRate;
@@ -731,7 +797,7 @@
     if (travelMode === 'regular') {
       travelNet = hours < 4 ? 5.0 : 0.0;
     } else if (travelMode === 'monthly') {
-      travelNet = 75.0; // باوشال شهري مخصص للعقود الكثيرة الزيارات
+      travelNet = 75.0;
     } else {
       travelNet = 30.0;
     }
@@ -757,6 +823,7 @@
       serviceName,
       hourlyRate: formatEuro(hourlyRate),
       hours: hours.toString().replace('.', ','),
+      scheduleInfoText,
       objArea,
       baseLabor: formatEuro(baseLabor),
       suppliesText: enableSupplies.checked ? `Inkl. Reinigungsmittel (${formatEuro(suppliesCost)})` : "Exklusive (wird bauseits gestellt)",
@@ -798,7 +865,7 @@ ich interessiere mich für ein unverbindliches Angebot gemäß Ihrer Preisberech
 
 🧹 *Gewählte Reinigungsleistung:*
 • Leistung: ${c.serviceName} (${c.hourlyRate}/Std.)
-• Arbeitsstunden (Gesamt/Monat): ${c.hours} Std. (= ${c.baseLabor})
+• Arbeitsstunden: ca. ${c.hours} Std./Monat${c.scheduleInfoText} (= ${c.baseLabor})
 • Objektfläche: ca. ${c.objArea} m²${areaNote}
 • Material: ${c.suppliesText}
 • Glasreinigung: ${c.glassDetails}
@@ -830,7 +897,7 @@ ${notes}`;
     window.location.href = mailto;
   });
 
-  [hoursInput, objectAreaInput, glassAreaInput, surchargeSelect, plzInput].forEach(el => {
+  [hoursInput, objectAreaInput, glassAreaInput, surchargeSelect, plzInput, daysInput, hoursPerDayInput].forEach(el => {
     el.addEventListener('input', calculate);
   });
 
