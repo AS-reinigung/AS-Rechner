@@ -454,8 +454,8 @@
         Aktivieren Sie diese Option, um die genauen Arbeitstage und Stunden einzutragen.
       </div>
 
-      <!-- إعدادات الجدول الأسبوعي التفصيلي (تظهر فقط عند التفعيل) -->
-      <div id="scheduleControls" style="display:none; margin-top:12px; border-top:1px dashed #cbd5e1; pt:10px;">
+      <!-- إعدادات الجدول الأسبوعي التفصيلي -->
+      <div id="scheduleControls" style="display:none; margin-top:12px; border-top:1px dashed #cbd5e1; padding-top:10px;">
         <div class="control-group" style="margin-top:10px;">
           <div class="control-header">
             <span>Arbeitstage pro Woche</span>
@@ -474,7 +474,7 @@
       </div>
     </div>
 
-    <!-- المؤشر الشهري المباشر (يعمل تلقائياً أو يدوياً) -->
+    <!-- المؤشر الشهري المباشر -->
     <div class="control-group" id="standardHoursGroup" style="margin-top: 14px;">
       <div class="control-header">
         <span>Gewünschte Arbeitsstunden (Monat / Einsatz)</span>
@@ -551,7 +551,7 @@
     <div class="section-title">7. Reinigungsintervall & Anfahrtskosten</div>
     <div class="grid-3" id="travelGroup">
       <div class="radio-card active" data-type="regular" data-label="Regelmäßige Klein-Einsätze">
-        <span>Regel, 5€ (< 4 Std.)</span>
+        <span>Regel, 5€ (&lt; 4 Std.)</span>
       </div>
       <div class="radio-card" data-type="monthly" data-label="Wartungsvertrag Monatspauschale (75,00 €)">
         <span>Monats-Pauschale (75 €)</span>
@@ -748,9 +748,8 @@
       document.getElementById('daysVal').textContent = daysPerWeek;
       document.getElementById('hoursPerDayVal').textContent = hrsPerDay.toString().replace('.', ',');
 
-      // حساب الساعات الشهرية بناءً على 4.33 أسبوع في الشهر
       const monthlyHoursExact = daysPerWeek * hrsPerDay * 4.3333;
-      hours = Math.round(monthlyHoursExact * 10) / 10; // تقريب لأقرب جزء من عشرة
+      hours = Math.round(monthlyHoursExact * 10) / 10;
       
       scheduleInfoText = ` (Wochenplan: ${daysPerWeek} Tage/Woche à ${hrsPerDay} Std. = ca. ${hours} Std./Monat)`;
     } else {
@@ -781,14 +780,14 @@
     const glassArea = parseInt(glassAreaInput.value, 10);
     document.getElementById('glassAreaVal').textContent = glassArea;
 
-    let glassDetails = "Nicht gewählt";
+    let glassDetails = "Nicht gewaehlt";
     if (enableGlass.checked) {
       glassCost = glassArea * glassRate;
       glassDetails = `${glassArea} m² (${glassTypeLabel}) = ${formatEuro(glassCost)}`;
       document.getElementById('glassSummaryTxt').textContent =
         glassArea + ' m² × ' + glassRate.toFixed(2).replace('.', ',') + ' €';
     } else {
-      document.getElementById('glassSummaryTxt').textContent = 'nicht gewählt';
+      document.getElementById('glassSummaryTxt').textContent = 'nicht gewaehlt';
     }
 
     const surchargeCost = (baseLabor + suppliesCost + glassCost) * surchargeRate;
@@ -852,32 +851,32 @@
     errorEl.style.display = 'none';
 
     const c = currentCalculation;
-    const areaNote = c.objArea >= 250 ? " (Objekt ab 250 m² - Preisabsprache gewünscht)" : "";
+    const areaNote = c.objArea >= 250 ? " (Objekt ab 250 qm - Preisabsprache gewuenscht)" : "";
 
-    return `Hallo A&S Gebäudereinigung Team,
+    return `Hallo A&S Gebaeudereinigung Team,
 
-ich interessiere mich für ein unverbindliches Angebot gemäß Ihrer Preisberechnung:
+ich interessiere mich fuer ein unverbindliches Angebot gemaess Ihrer Preisberechnung:
 
-👤 *Kundendaten:*
-• Name/Firma: ${name}
-• Telefon: ${phone}
-• PLZ / Ort: ${address}
+*Kundendaten:*
+- Name/Firma: ${name}
+- Telefon: ${phone}
+- PLZ / Ort: ${address}
 
-🧹 *Gewählte Reinigungsleistung:*
-• Leistung: ${c.serviceName} (${c.hourlyRate}/Std.)
-• Arbeitsstunden: ca. ${c.hours} Std./Monat${c.scheduleInfoText} (= ${c.baseLabor})
-• Objektfläche: ca. ${c.objArea} m²${areaNote}
-• Material: ${c.suppliesText}
-• Glasreinigung: ${c.glassDetails}
-• Einsatzzeit/Zuschlag: ${c.surchargeLabel} (= ${c.surchargeCost})
-• Intervall & Anfahrt: ${c.travelLabel} (= ${c.travelNet})
+*Gewaehlte Reinigungsleistung:*
+- Leistung: ${c.serviceName} (${c.hourlyRate}/Std.)
+- Arbeitsstunden: ca. ${c.hours} Std./Monat${c.scheduleInfoText} (= ${c.baseLabor})
+- Objektflaeche: ca. ${c.objArea} qm${areaNote}
+- Material: ${c.suppliesText}
+- Glasreinigung: ${c.glassDetails}
+- Einsatzzeit/Zuschlag: ${c.surchargeLabel} (= ${c.surchargeCost})
+- Intervall & Anfahrt: ${c.travelLabel} (= ${c.travelNet})
 
-💶 *Kalkulierter Richtpreis:*
-• Summe (Netto): ${c.netTotal}
-• Zzgl. 19% MwSt.: ${c.vatAmount}
-• *Gesamtbetrag (Brutto): ${c.grossTotal}*
+*Kalkulierter Richtpreis:*
+- Summe (Netto): ${c.netTotal}
+- Zzgl. 19% MwSt.: ${c.vatAmount}
+- *Gesamtbetrag (Brutto): ${c.grossTotal}*
 
-📝 *Nachricht / Wunschtermin:*
+*Nachricht / Wunschtermin:*
 ${notes}`;
   }
 
@@ -892,7 +891,7 @@ ${notes}`;
     const msg = buildMessageText();
     if (!msg) return;
     const name = document.getElementById('custName').value.trim();
-    const subject = `Preisanfrage Gebäudereinigung – ${name}`;
+    const subject = `Preisanfrage Gebaeudereinigung – ${name}`;
     const mailto = `mailto:${COMPANY_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(msg.replace(/\*/g, ''))}`;
     window.location.href = mailto;
   });
