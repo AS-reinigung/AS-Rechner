@@ -426,11 +426,12 @@
     <div class="section-title">2. Arbeitsstunden & Objektgröße</div>
     <div class="control-group">
       <div class="control-header">
-        <span>Gewünschte Arbeitsstunden</span>
+        <span>Gewünschte Arbeitsstunden (Monat / Einsatz)</span>
         <span class="badge"><span id="hoursVal">3</span> Std.</span>
       </div>
-      <input type="range" id="hoursInput" min="2" max="20" step="0.5" value="3">
-      <div class="min-hours-note">* Alle Reinigungsarbeiten werden mit mindestens 2 Arbeitsstunden berechnet.</div>
+      <!-- تم رفع الحد الأقصى إلى 100 ساعة -->
+      <input type="range" id="hoursInput" min="2" max="100" step="1" value="3">
+      <div class="min-hours-note">* يدعم الطلبات الفردية وعقود الصيانة الشهرية للشركات حتى 100 ساعة.</div>
     </div>
 
     <div class="control-group">
@@ -552,7 +553,7 @@
       <input type="text" id="custName" class="form-input" placeholder="Ihr Vor- und Nachname / Firma *">
       <input type="tel" id="custPhone" class="form-input" placeholder="Ihre Telefonnummer / Rückrufnummer *">
       <input type="text" id="custAddress" class="form-input" placeholder="PLZ / Ort des Objekts (z.B. Bremen)">
-      <textarea id="custNotes" class="form-textarea" rows="3" placeholder="Wunschtermin oder Hinweise (z.B. Entrümpelung, Besichtigung ab 250 m²)..."></textarea>
+      <textarea id="custNotes" class="form-textarea" rows="3" placeholder="Wunschtermin oder Hinweise (z.B. 40 Std. monatlich für Büro)..."></textarea>
 
       <div class="btn-group">
         <button type="button" class="btn-action btn-whatsapp" id="whatsappBtn">
@@ -571,7 +572,6 @@
 </div>
 
 <script>
-  // Firmendaten von A&S Gebäudereinigung Bremen
   const COMPANY_WHATSAPP = "4917645217530";
   const COMPANY_EMAIL = "Info@as-reinigung-bremen.de";
 
@@ -729,7 +729,7 @@ ich interessiere mich für ein unverbindliches Angebot gemäß Ihrer Preisberech
 
 🧹 *Gewählte Reinigungsleistung:*
 • Leistung: ${c.serviceName} (${c.hourlyRate}/Std.)
-• Arbeitsstunden: ${c.hours} Std. (= ${c.baseLabor})
+• Arbeitsstunden (Gesamt/Monat): ${c.hours} Std. (= ${c.baseLabor})
 • Objektfläche: ca. ${c.objArea} m²${areaNote}
 • Glasreinigung: ${c.glassDetails}
 • Einsatzzeit/Zuschlag: ${c.surchargeLabel} (= ${c.surchargeCost})
