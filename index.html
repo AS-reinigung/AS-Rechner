@@ -168,14 +168,14 @@
       cursor: pointer;
     }
 
-    .grid-2 {
+    .grid-3 {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
     }
 
-    @media (max-width: 540px) {
-      .grid-2 {
+    @media (max-width: 640px) {
+      .grid-3 {
         grid-template-columns: 1fr;
       }
     }
@@ -183,13 +183,15 @@
     .radio-card {
       border: 2px solid var(--border);
       border-radius: 10px;
-      padding: 11px 13px;
+      padding: 11px 10px;
       cursor: pointer;
       transition: 0.2s;
       display: flex;
+      flex-direction: column;
       align-items: center;
+      text-align: center;
       justify-content: space-between;
-      font-size: 0.9rem;
+      font-size: 0.85srem;
     }
 
     .radio-card:hover {
@@ -429,7 +431,7 @@
       Professionelle Reinigung für Büros und Arztpraxen inkl. spezieller Desinfektionsleistungen.
     </div>
 
-    <!-- إضافة التحقق من الرمز البريدي PLZ -->
+    <!-- التحقق من الرمز البريدي PLZ -->
     <div class="section-title">2. Einsatzort prüfen (PLZ Bremen & Umland)</div>
     <div class="control-group">
       <div class="control-header">
@@ -444,9 +446,9 @@
     <div class="control-group">
       <div class="control-header">
         <span>Gewünschte Arbeitsstunden (Monat / Einsatz)</span>
-        <span class="badge"><span id="hoursVal">3</span> Std.</span>
+        <span class="badge"><span id="hoursVal">33</span> Std.</span>
       </div>
-      <input type="range" id="hoursInput" min="2" max="100" step="1" value="3">
+      <input type="range" id="hoursInput" min="2" max="100" step="1" value="33">
       <div class="min-hours-note">* Unterstützt Einzelaufträge sowie regelmäßige Rahmen- / Wartungsverträge bis 100 Std.</div>
     </div>
 
@@ -461,7 +463,7 @@
       </div>
     </div>
 
-    <!-- إضافة خيار مواد التنظيف -->
+    <!-- خيار مواد التنظيف -->
     <div class="section-title">4. Reinigungsmittel & Zubehör</div>
     <div class="extras-box">
       <label style="display:flex; align-items:center; gap:8px; font-weight:700; cursor:pointer;">
@@ -489,13 +491,13 @@
           <input type="range" id="glassAreaInput" min="25" max="300" step="5" value="25">
         </div>
 
-        <div class="grid-2" id="buildingAgeGroup">
-          <div class="radio-card active" data-rate="3.0" data-label="Neubau (3,00 €/m²)">
+        <div class="grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;" id="buildingAgeGroup">
+          <div class="radio-card active" data-rate="3.0" data-label="Neubau (3,00 €/m²)" style="flex-direction:row; justify-content:space-between;">
             <span>Neubau</span>
             <strong>3,00 € / m²</strong>
           </div>
-          <div class="radio-card" data-rate="3.5" data-label="Altbau (3,50 €/m²)">
-            <span>Altbau (zzgl. 0,50 €)</span>
+          <div class="radio-card" data-rate="3.5" data-label="Altbau (3,50 €/m²)" style="flex-direction:row; justify-content:space-between;">
+            <span>Altbau</span>
             <strong>3,50 € / m²</strong>
           </div>
         </div>
@@ -513,15 +515,17 @@
       <option value="0.50" data-label="24h Notdienst Soforteinsatz (+50%)">24h Service / Notdienst Soforteinsatz (Stufe 2) — zzgl. 50%</option>
     </select>
 
+    <!-- خيارات التنقل المحدثة لتشمل باوشال العقود الشهرية -->
     <div class="section-title">7. Reinigungsintervall & Anfahrtskosten</div>
-    <div class="grid-2" id="travelGroup">
-      <div class="radio-card active" data-type="regular" data-label="Regelmäßige Reinigung">
-        <span>Regelmäßige Reinigung</span>
-        <small style="color:var(--muted);">5,00 € (unter 4 Std.)</small>
+    <div class="grid-3" id="travelGroup">
+      <div class="radio-card active" data-type="regular" data-label="Regelmäßige Klein-Einsätze">
+        <span>Regel, 5€ (< 4 Std.)</span>
       </div>
-      <div class="radio-card" data-type="pauschal" data-label="Einmaliger Einsatz (Pauschal)">
-        <span>Einmaliger Einsatz (Pauschal)</span>
-        <small style="color:var(--muted);">30,00 € pauschal</small>
+      <div class="radio-card" data-type="monthly" data-label="Wartungsvertrag Monatspauschale (75,00 €)">
+        <span>Monats-Pauschale (75 €)</span>
+      </div>
+      <div class="radio-card" data-type="pauschal" data-label="Einmaliger Einsatz (30,00 €)">
+        <span>Einmalig (30 €)</span>
       </div>
     </div>
 
@@ -548,8 +552,8 @@
 
     <ul class="breakdown">
       <li>
-        <span>Reinigung (<span id="hrsSummary">3</span> Std. × <span id="rateSummary">27,00</span> €):</span>
-        <strong id="laborCostTxt">81,00 €</strong>
+        <span>Reinigung (<span id="hrsSummary">33</span> Std. × <span id="rateSummary">27,00</span> €):</span>
+        <strong id="laborCostTxt">891,00 €</strong>
       </li>
       <li id="suppliesRow" style="display:none;">
         <span>Reinigungsmittel (+15%):</span>
@@ -569,11 +573,11 @@
       </li>
       <li>
         <span>Zzgl. 19% MwSt.:</span>
-        <strong id="vatCostTxt">16,34 €</strong>
+        <strong id="vatCostTxt">170,24 €</strong>
       </li>
       <li class="total-row">
         <span>Gesamtbetrag (Brutto):</span>
-        <span id="finalGrossTxt">102,34 €</span>
+        <span id="finalGrossTxt">1066,24 €</span>
       </li>
     </ul>
 
@@ -624,14 +628,13 @@
   let glassRate = 3.0;
   let glassTypeLabel = "Neubau (3,00 €/m²)";
   let travelMode = "regular";
-  let travelLabel = "Regelmäßige Reinigung";
+  let travelLabel = "Regelmäßige Klein-Einsätze";
   let currentCalculation = {};
 
   function formatEuro(num) {
     return num.toFixed(2).replace('.', ',') + ' €';
   }
 
-  // التحقق البسيط من الرمز البريدي في بريمن والمحيط (تبدأ غالباً بـ 28 أو محيطها)
   plzInput.addEventListener('input', () => {
     const val = plzInput.value.trim();
     if (val.length === 5) {
@@ -699,7 +702,6 @@
 
     const baseLabor = hours * hourlyRate;
 
-    // حساب مواد التنظيف (15% إضافية إذا تم تفعيلها)
     let suppliesCost = 0;
     if (enableSupplies.checked) {
       suppliesCost = baseLabor * 0.15;
@@ -728,6 +730,8 @@
     let travelNet = 0;
     if (travelMode === 'regular') {
       travelNet = hours < 4 ? 5.0 : 0.0;
+    } else if (travelMode === 'monthly') {
+      travelNet = 75.0; // باوشال شهري مخصص للعقود الكثيرة الزيارات
     } else {
       travelNet = 30.0;
     }
