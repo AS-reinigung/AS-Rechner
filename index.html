@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A&S Gebäudereinigung Bremen – Preisrechner & Direkt-Anfrage</title>
+  <style>
+    :root {
+      --brand-blue: #1e6091;
+      --brand-dark: #154569;
+      --brand-light: #e0f2fe;
+      --brand-red: #e63946;
+      --brand-yellow: #ffb703;
+      --whatsapp: #25D366;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 24px 16px;
+      line-height: 1.55;
+    }
+
+    .header-banner {
+      max-width: 1140px;
+      margin: 0 auto 22px;
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-dark));
+      color: #fff;
+      padding: 22px 28px;
+      border-radius: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      box-shadow: 0 6px 20px rgba(30, 96, 145, 0.2);
+    }
+
+    .brand-title {
+      font-size: 1.65rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .brand-title span {
+      color: var(--brand-red);
+      background: #fff;
+      padding: 2px 10px;
+      border-radius: 8px;
+      margin-right: 8px;
+    }
+
+    .header-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .header-cta {
+      background: var(--brand-yellow);
+      color: #0f172a;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 20px 0 12px;
+      color: var(--brand-blue);
+      border-bottom: 2px solid var(--brand-light);
+      padding-bottom: 6px;
+    }
+
+    .section-title:first-child {
+      margin-top: 0;
+    }
+
+    select, .form-input, .form-textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 0.94rem;
+      background: #fff;
+      color: var(--text);
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+
+    select:focus, .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--brand-blue);
+    }
+
+    .service-desc {
+      background: #f8fafc;
+      border-left: 4px solid var(--brand-blue);
+      padding: 10px 14px;
+      font-size: 0.86rem;
+      color: var(--muted);
+      border-radius: 6px;
+      margin-bottom: 14px;
+    }
+
+    .control-group {
+      margin-bottom: 16px;
+    }
+
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+    }
+
+    .badge {
+      background: var(--brand-light);
+      color: var(--brand-blue);
+      padding: 2px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--brand-blue);
+      cursor: pointer;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 540px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .radio-card {
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 13px;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .radio-card:hover {
+      border-color: var(--brand-blue);
+    }
+
+    .radio-card.active {
+      border-color: var(--brand-blue);
+      background: var(--brand-light);
+      font-weight: 700;
+    }
+
+    .glass-box {
+      background: #f0f9ff;
+      border: 1px dashed #7dd3fc;
+      padding: 14px;
+      border-radius: 12px;
+      margin-top: 8px;
+    }
+
+    .alert-250 {
+      display: none;
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      color: #92400e;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .min-hours-note {
+      font-size: 0.8rem;
+      color: var(--brand-red);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .special-services {
+      margin-top: 18px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.85rem;
+    }
+
+    .special-services strong {
+      color: var(--brand-blue);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .tags-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      background: #e2e8f0;
+      color: #1e293b;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .price-hero {
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-dark));
+      color: #fff;
+      padding: 20px;
+      border-radius: 14px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .price-hero .net-val {
+      font-size: 2.35rem;
+      font-weight: 800;
+      margin: 4px 0;
+    }
+
+    .price-hero .gross-val {
+      font-size: 0.94rem;
+      background: rgba(255, 255, 255, 0.16);
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-top: 4px;
+    }
+
+    .breakdown {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+
+    .breakdown li {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.9rem;
+    }
+
+    .breakdown li.total-row {
+      border-top: 2px solid var(--brand-blue);
+      border-bottom: none;
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: var(--brand-blue);
+      padding-top: 12px;
+    }
+
+    .contact-form-box {
+      border-top: 2px dashed var(--border);
+      padding-top: 18px;
+      margin-top: 10px;
+    }
+
+    .contact-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .btn-action {
+      width: 100%;
+      padding: 13px 16px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.96rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.15s, opacity 0.2s;
+      color: #fff;
+    }
+
+    .btn-action:hover {
+      opacity: 0.94;
+      transform: translateY(-1px);
+    }
+
+    .btn-whatsapp {
+      background-color: var(--whatsapp);
+    }
+
+    .btn-email {
+      background-color: var(--brand-blue);
+    }
+
+    .direct-info {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 0.83rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .direct-info a {
+      color: var(--brand-blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .error-msg {
+      display: none;
+      color: var(--brand-red);
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header-banner">
+  <div class="brand-title"><span>A&S</span> Gebäudereinigung</div>
+  <div class="header-contact">
+    <a href="tel:+4917645217530" class="header-cta">📞 +49 176 45217530</a>
+    <a href="mailto:Info@as-reinigung-bremen.de" class="header-cta" style="background:#fff;">✉️ Info@as-reinigung-bremen.de</a>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Linke Spalte: Konfigurator -->
+  <div class="card">
+    <div class="section-title">1. Reinigungsleistung auswählen</div>
+    <select id="serviceSelect">
+      <option value="27" data-name="Büroreinigung / Praxisreinigung" data-desc="Professionelle Reinigung für Büros und Arztpraxen inkl. spezieller Desinfektionsleistungen.">
+        Büroreinigung / Praxisreinigung — 27,00 € / Std.
+      </option>
+      <option value="27" data-name="Unterhaltsreinigung" data-desc="Inklusive Böden, Möbel, Sanitäranlagen, Heizkörper, Küche, Türen, Lichtschalter, Steckdosen, Lampen.">
+        Unterhaltsreinigung — 27,00 € / Std.
+      </option>
+      <option value="30" data-name="Haushaltsreinigung (Privathaushalt)" data-desc="Gründliche und regelmäßige Reinigung für Privathaushalte zum langfristigen Werterhalt Ihrer Immobilie.">
+        Haushaltsreinigung (Privathaushalte) — 30,00 € / Std.
+      </option>
+      <option value="30" data-name="Grundreinigung" data-desc="Intensive Reinigung bei hartnäckigen, tiefsitzenden Verschmutzungen stark ausgelasteter Räumlichkeiten.">
+        Grundreinigung — 30,00 € / Std.
+      </option>
+      <option value="31" data-name="Aufgangs- u. Treppenreinigung" data-desc="Inklusive Treppengeländer, Briefkästen, Klingeln, Lichtschalter, Lampen, Haustüren, Wohnungstüren, Türrahmen.">
+        Aufgangs- u. Treppenreinigung — 31,00 € / Std.
+      </option>
+      <option value="31" data-name="Baufeinreinigung" data-desc="Gründliche Feinreinigung nach Neubau- oder Renovierungsarbeiten.">
+        Baufeinreinigung — 31,00 € / Std.
+      </option>
+      <option value="35" data-name="Baureinigung / Bauschlussreinigung" data-desc="Bauschlussreinigung & Entfernung von groben Bau- und Renovierungsverschmutzungen.">
+        Baureinigung / Bauschlussreinigung — 35,00 € / Std.
+      </option>
+      <option value="5.5" data-name="Bodenreinigung (intensiv)" data-desc="Spezielle, intensive Maschinen- oder Tiefenreinigung für stark beanspruchte Böden.">
+        Bodenreinigung (intensiv) — 05,50 € / Std.
+      </option>
+    </select>
+    <div class="service-desc" id="serviceDesc">
+      Professionelle Reinigung für Büros und Arztpraxen inkl. spezieller Desinfektionsleistungen.
+    </div>
+
+    <div class="section-title">2. Arbeitsstunden & Objektgröße</div>
+    <div class="control-group">
+      <div class="control-header">
+        <span>Gewünschte Arbeitsstunden</span>
+        <span class="badge"><span id="hoursVal">3</span> Std.</span>
+      </div>
+      <input type="range" id="hoursInput" min="2" max="20" step="0.5" value="3">
+      <div class="min-hours-note">* Alle Reinigungsarbeiten werden mit mindestens 2 Arbeitsstunden berechnet.</div>
+    </div>
+
+    <div class="control-group">
+      <div class="control-header">
+        <span>Ungefähre Objektfläche (m²)</span>
+        <span class="badge"><span id="objectAreaVal">100</span> m²</span>
+      </div>
+      <input type="range" id="objectAreaInput" min="30" max="600" step="10" value="100">
+      <div class="alert-250" id="alert250">
+        💡 Hinweis: Bei Objekten ab 250 m² sind individuelle Preisabsprachen möglich!
+      </div>
+    </div>
+
+    <div class="section-title">3. Glasreinigung (Optional, ab 25 m²)</div>
+    <div class="glass-box">
+      <label style="display:flex; align-items:center; gap:8px; font-weight:700; cursor:pointer; margin-bottom:10px;">
+        <input type="checkbox" id="enableGlass" style="width:18px; height:18px; accent-color:var(--brand-blue);">
+        Glasreinigung hinzufügen (ab 25 m² bei 1/2-jähriger Reinigung)
+      </label>
+
+      <div id="glassControls" style="display:none;">
+        <div class="control-group">
+          <div class="control-header">
+            <span>Glasfläche in Quadratmetern (m²)</span>
+            <span class="badge"><span id="glassAreaVal">25</span> m²</span>
+          </div>
+          <input type="range" id="glassAreaInput" min="25" max="300" step="5" value="25">
+        </div>
+
+        <div class="grid-2" id="buildingAgeGroup">
+          <div class="radio-card active" data-rate="3.0" data-label="Neubau (3,00 €/m²)">
+            <span>Neubau</span>
+            <strong>3,00 € / m²</strong>
+          </div>
+          <div class="radio-card" data-rate="3.5" data-label="Altbau (3,50 €/m²)">
+            <span>Altbau (zzgl. 0,50 €)</span>
+            <strong>3,50 € / m²</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">4. Einsatzzeit & Zuschläge</div>
+    <select id="surchargeSelect">
+      <option value="0" data-label="Reguläre Arbeitszeit (0%)">Reguläre Arbeitszeit (Mo–Fr tagsüber bis 20:00 Uhr) — 0% Zuschlag</option>
+      <option value="0.25" data-label="Mo–Fr 20:00–24:00 Uhr (+25%)">Spätdienst (Mo–Fr ab 20:00 Uhr – 24:00 Uhr) — zzgl. 25%</option>
+      <option value="0.50" data-label="Nachtarbeit 24:00–05:00 Uhr (+50%)">Nachtschicht (24:00 Uhr – 5:00 Uhr) — zzgl. 50%</option>
+      <option value="0.25" data-label="Samstagsarbeit (+25%)">Samstagsarbeit (An Samstagen) — zzgl. 25%</option>
+      <option value="0.75" data-label="Sonn- und Feiertage (+75%)">Sonn- und Feiertage — zzgl. 75%</option>
+      <option value="0.25" data-label="24h Notdienst Soforteinsatz (+25%)">24h Service / Notdienst Soforteinsatz (Stufe 1) — zzgl. 25%</option>
+      <option value="0.50" data-label="24h Notdienst Soforteinsatz (+50%)">24h Service / Notdienst Soforteinsatz (Stufe 2) — zzgl. 50%</option>
+    </select>
+
+    <div class="section-title">5. Reinigungsintervall & Anfahrtskosten</div>
+    <div class="grid-2" id="travelGroup">
+      <div class="radio-card active" data-type="regular" data-label="Regelmäßige Reinigung">
+        <span>Regelmäßige Reinigung</span>
+        <small style="color:var(--muted);">5,00 € (unter 4 Std.)</small>
+      </div>
+      <div class="radio-card" data-type="pauschal" data-label="Einmaliger Einsatz (Pauschal)">
+        <span>Einmaliger Einsatz (Pauschal)</span>
+        <small style="color:var(--muted);">30,00 € pauschal</small>
+      </div>
+    </div>
+
+    <div class="special-services">
+      <strong>Weitere Spezialleistungen (Angebot nach Besichtigung):</strong>
+      Sie benötigen eine unserer Spezialleistungen? Erwähnen Sie dies einfach unten im Nachrichtenfeld:
+      <div class="tags-wrap">
+        <span class="tag">Graffitibeseitigung</span>
+        <span class="tag">Entrümpelung</span>
+        <span class="tag">Zwischenreinigung</span>
+        <span class="tag">Sonderreinigung</span>
+        <span class="tag">Tatortreinigung</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rechte Spalte: Zusammenfassung & Direkt-Anfrage -->
+  <div class="card">
+    <div class="price-hero">
+      <div>Geschätzter Gesamtpreis (Netto)</div>
+      <div class="net-val" id="netTotalHero">86,00 €</div>
+      <div class="gross-val">Inkl. 19% MwSt. (Brutto): <strong id="grossTotalHero">102,34 €</strong></div>
+    </div>
+
+    <ul class="breakdown">
+      <li>
+        <span>Reinigung (<span id="hrsSummary">3</span> Std. × <span id="rateSummary">27,00</span> €):</span>
+        <strong id="laborCostTxt">81,00 €</strong>
+      </li>
+      <li>
+        <span>Zeitzuschlag / Notdienst (<span id="surchargePctTxt">0%</span>):</span>
+        <strong id="surchargeCostTxt">0,00 €</strong>
+      </li>
+      <li>
+        <span>Glasreinigung (<span id="glassSummaryTxt">nicht gewählt</span>):</span>
+        <strong id="glassCostTxt">0,00 €</strong>
+      </li>
+      <li>
+        <span>Anfahrtskosten (Netto):</span>
+        <strong id="travelCostTxt">5,00 €</strong>
+      </li>
+      <li>
+        <span>Zzgl. 19% MwSt.:</span>
+        <strong id="vatCostTxt">16,34 €</strong>
+      </li>
+      <li class="total-row">
+        <span>Gesamtbetrag (Brutto):</span>
+        <span id="finalGrossTxt">102,34 €</span>
+      </li>
+    </ul>
+
+    <!-- Kontakt- & Anfrageformular -->
+    <div class="contact-form-box">
+      <div class="contact-title">Unverbindliches Angebot anfordern</div>
+      <div class="error-msg" id="formError">Bitte geben Sie mindestens Ihren Namen und Ihre Telefonnummer ein.</div>
+
+      <input type="text" id="custName" class="form-input" placeholder="Ihr Vor- und Nachname / Firma *">
+      <input type="tel" id="custPhone" class="form-input" placeholder="Ihre Telefonnummer / Rückrufnummer *">
+      <input type="text" id="custAddress" class="form-input" placeholder="PLZ / Ort des Objekts (z.B. Bremen)">
+      <textarea id="custNotes" class="form-textarea" rows="3" placeholder="Wunschtermin oder Hinweise (z.B. Entrümpelung, Besichtigung ab 250 m²)..."></textarea>
+
+      <div class="btn-group">
+        <button type="button" class="btn-action btn-whatsapp" id="whatsappBtn">
+          📲 Anfrage direkt per WhatsApp senden
+        </button>
+        <button type="button" class="btn-action btn-email" id="emailBtn">
+          ✉️ Anfrage per E-Mail senden
+        </button>
+      </div>
+
+      <div class="direct-info">
+        Direktkontakt: <a href="tel:+4917645217530">+49 176 45217530</a> | <a href="mailto:Info@as-reinigung-bremen.de">Info@as-reinigung-bremen.de</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Firmendaten von A&S Gebäudereinigung Bremen
+  const COMPANY_WHATSAPP = "4917645217530";
+  const COMPANY_EMAIL = "Info@as-reinigung-bremen.de";
+
+  const serviceSelect = document.getElementById('serviceSelect');
+  const serviceDesc = document.getElementById('serviceDesc');
+  const hoursInput = document.getElementById('hoursInput');
+  const objectAreaInput = document.getElementById('objectAreaInput');
+  const alert250 = document.getElementById('alert250');
+  const enableGlass = document.getElementById('enableGlass');
+  const glassControls = document.getElementById('glassControls');
+  const glassAreaInput = document.getElementById('glassAreaInput');
+  const surchargeSelect = document.getElementById('surchargeSelect');
+
+  let glassRate = 3.0;
+  let glassTypeLabel = "Neubau (3,00 €/m²)";
+  let travelMode = "regular";
+  let travelLabel = "Regelmäßige Reinigung";
+
+  let currentCalculation = {};
+
+  function formatEuro(num) {
+    return num.toFixed(2).replace('.', ',') + ' €';
+  }
+
+  document.querySelectorAll('#buildingAgeGroup .radio-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('#buildingAgeGroup .radio-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      glassRate = parseFloat(card.dataset.rate);
+      glassTypeLabel = card.dataset.label;
+      calculate();
+    });
+  });
+
+  document.querySelectorAll('#travelGroup .radio-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('#travelGroup .radio-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      travelMode = card.dataset.type;
+      travelLabel = card.dataset.label;
+      calculate();
+    });
+  });
+
+  enableGlass.addEventListener('change', () => {
+    glassControls.style.display = enableGlass.checked ? 'block' : 'none';
+    calculate();
+  });
+
+  serviceSelect.addEventListener('change', () => {
+    const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+    serviceDesc.textContent = selectedOption.dataset.desc;
+    calculate();
+  });
+
+  function calculate() {
+    const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+    const serviceName = selectedOption.dataset.name;
+    const hourlyRate = parseFloat(serviceSelect.value);
+    const hours = Math.max(2, parseFloat(hoursInput.value));
+    const objArea = parseInt(objectAreaInput.value, 10);
+
+    const surchargeOpt = surchargeSelect.options[surchargeSelect.selectedIndex];
+    const surchargeRate = parseFloat(surchargeSelect.value);
+    const surchargeLabel = surchargeOpt.dataset.label;
+
+    document.getElementById('hoursVal').textContent = hours.toString().replace('.', ',');
+    document.getElementById('objectAreaVal').textContent = objArea;
+
+    alert250.style.display = objArea >= 250 ? 'block' : 'none';
+
+    const baseLabor = hours * hourlyRate;
+
+    let glassCost = 0;
+    const glassArea = parseInt(glassAreaInput.value, 10);
+    document.getElementById('glassAreaVal').textContent = glassArea;
+
+    let glassDetails = "Nicht gewählt";
+    if (enableGlass.checked) {
+      glassCost = glassArea * glassRate;
+      glassDetails = `${glassArea} m² (${glassTypeLabel}) = ${formatEuro(glassCost)}`;
+      document.getElementById('glassSummaryTxt').textContent =
+        glassArea + ' m² × ' + glassRate.toFixed(2).replace('.', ',') + ' €';
+    } else {
+      document.getElementById('glassSummaryTxt').textContent = 'nicht gewählt';
+    }
+
+    const surchargeCost = (baseLabor + glassCost) * surchargeRate;
+
+    let travelNet = 0;
+    if (travelMode === 'regular') {
+      travelNet = hours < 4 ? 5.0 : 0.0;
+    } else {
+      travelNet = 30.0;
+    }
+
+    const netTotal = baseLabor + glassCost + surchargeCost + travelNet;
+    const vatAmount = netTotal * 0.19;
+    const grossTotal = netTotal + vatAmount;
+
+    document.getElementById('hrsSummary').textContent = hours.toString().replace('.', ',');
+    document.getElementById('rateSummary').textContent = hourlyRate.toFixed(2).replace('.', ',');
+    document.getElementById('laborCostTxt').textContent = formatEuro(baseLabor);
+    document.getElementById('surchargePctTxt').textContent = Math.round(surchargeRate * 100) + '%';
+    document.getElementById('surchargeCostTxt').textContent = formatEuro(surchargeCost);
+    document.getElementById('glassCostTxt').textContent = formatEuro(glassCost);
+    document.getElementById('travelCostTxt').textContent = formatEuro(travelNet);
+    document.getElementById('vatCostTxt').textContent = formatEuro(vatAmount);
+
+    document.getElementById('netTotalHero').textContent = formatEuro(netTotal);
+    document.getElementById('grossTotalHero').textContent = formatEuro(grossTotal);
+    document.getElementById('finalGrossTxt').textContent = formatEuro(grossTotal);
+
+    currentCalculation = {
+      serviceName,
+      hourlyRate: formatEuro(hourlyRate),
+      hours: hours.toString().replace('.', ','),
+      objArea,
+      baseLabor: formatEuro(baseLabor),
+      glassDetails,
+      surchargeLabel,
+      surchargeCost: formatEuro(surchargeCost),
+      travelLabel,
+      travelNet: formatEuro(travelNet),
+      netTotal: formatEuro(netTotal),
+      vatAmount: formatEuro(vatAmount),
+      grossTotal: formatEuro(grossTotal)
+    };
+  }
+
+  function buildMessageText() {
+    const name = document.getElementById('custName').value.trim();
+    const phone = document.getElementById('custPhone').value.trim();
+    const address = document.getElementById('custAddress').value.trim() || "Nicht angegeben";
+    const notes = document.getElementById('custNotes').value.trim() || "Keine";
+    const errorEl = document.getElementById('formError');
+
+    if (!name || !phone) {
+      errorEl.style.display = 'block';
+      return null;
+    }
+    errorEl.style.display = 'none';
+
+    const c = currentCalculation;
+    const areaNote = c.objArea >= 250 ? " (Objekt ab 250 m² - Preisabsprache gewünscht)" : "";
+
+    return `Hallo A&S Gebäudereinigung Team,
+
+ich interessiere mich für ein unverbindliches Angebot gemäß Ihrer Preisberechnung:
+
+👤 *Kundendaten:*
+• Name/Firma: ${name}
+• Telefon: ${phone}
+• Ort/Objekt: ${address}
+
+🧹 *Gewählte Reinigungsleistung:*
+• Leistung: ${c.serviceName} (${c.hourlyRate}/Std.)
+• Arbeitsstunden: ${c.hours} Std. (= ${c.baseLabor})
+• Objektfläche: ca. ${c.objArea} m²${areaNote}
+• Glasreinigung: ${c.glassDetails}
+• Einsatzzeit/Zuschlag: ${c.surchargeLabel} (= ${c.surchargeCost})
+• Intervall & Anfahrt: ${c.travelLabel} (= ${c.travelNet})
+
+💶 *Kalkulierter Richtpreis:*
+• Summe (Netto): ${c.netTotal}
+• Zzgl. 19% MwSt.: ${c.vatAmount}
+• *Gesamtbetrag (Brutto): ${c.grossTotal}*
+
+📝 *Nachricht / Wunschtermin:*
+${notes}`;
+  }
+
+  document.getElementById('whatsappBtn').addEventListener('click', () => {
+    const msg = buildMessageText();
+    if (!msg) return;
+    const url = `https://wa.me/${COMPANY_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  });
+
+  document.getElementById('emailBtn').addEventListener('click', () => {
+    const msg = buildMessageText();
+    if (!msg) return;
+    const name = document.getElementById('custName').value.trim();
+    const subject = `Preisanfrage Gebäudereinigung – ${name}`;
+    const mailto = `mailto:${COMPANY_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(msg.replace(/\*/g, ''))}`;
+    window.location.href = mailto;
+  });
+
+  [hoursInput, objectAreaInput, glassAreaInput, surchargeSelect].forEach(el => {
+    el.addEventListener('input', calculate);
+  });
+
+  calculate();
+</script>
+
+</body>
+</html>
